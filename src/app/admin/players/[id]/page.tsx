@@ -2,6 +2,8 @@ import { supabaseAdmin } from '@/lib/supabase'
 import { updateStyle, banPlayer, unbanPlayer, extendPass } from '../../actions'
 import Link from 'next/link'
 
+export const runtime = 'edge';
+
 export default async function PlayerPage({ params }: { params: { id: string } }) {
   const playerId = params.id
   
