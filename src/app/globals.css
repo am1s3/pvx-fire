@@ -2,8 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
-body { background-color: #0a0a0a; color: #e5e5e5; font-family: sans-serif; }
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #0a0a0a; }
-::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 4px; }
-.glow-fire { box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+:root {
+  --abyss: #0a0a0a;
+  --ash: #171717;
+  --blood: #dc2626;
+  --fire: #ef4444;
+  --ember: #f97316;
+}
+
+body {
+  background-color: var(--abyss);
+  color: #e5e5e5;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Кастомный скроллбар */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--abyss);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--blood);
+  border-radius: 4px;
+}
+
+/* Огненное свечение для кнопок */
+.glow-fire {
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.4), 0 0 30px rgba(239, 68, 68, 0.1);
+  transition: all 0.3s ease;
+}
+
+.glow-fire:hover {
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.6), 0 0 40px rgba(239, 68, 68, 0.2);
+}
