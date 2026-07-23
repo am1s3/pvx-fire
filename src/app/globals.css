@@ -2,156 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --abyss: #0a0a0a;
-  --ash: #171717;
-  --blood: #dc2626;
-  --fire: #ef4444;
-  --ember: #f97316;
-}
-
 body {
-  background-color: var(--abyss);
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
   color: #e5e5e5;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  overflow-x: hidden;
+  font-family: system-ui, -apple-system, sans-serif;
 }
 
-/* Кастомный скроллбар */
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--abyss);
-}
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #ef4444, #f97316);
-  border-radius: 5px;
-}
-
-/* Огненное свечение */
-.glow-fire {
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.5), 0 0 40px rgba(239, 68, 68, 0.2);
+/* Простое свечение */
+.glow {
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
   transition: all 0.3s ease;
 }
 
-.glow-fire:hover {
-  box-shadow: 0 0 30px rgba(239, 68, 68, 0.8), 0 0 60px rgba(239, 68, 68, 0.4);
-  transform: translateY(-2px);
-}
-
-/* Анимация пульсации */
-@keyframes pulse-fire {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(239, 68, 68, 0.8), 0 0 60px rgba(249, 115, 22, 0.4);
-  }
-}
-
-.pulse-fire {
-  animation: pulse-fire 2s infinite;
-}
-
-/* Анимация градиента */
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.gradient-animate {
-  background-size: 200% 200%;
-  animation: gradient-shift 3s ease infinite;
-}
-
-/* Эффект огня для кнопок */
-@keyframes fire-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(239, 68, 68, 0.5), 0 0 40px rgba(249, 115, 22, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 30px rgba(239, 68, 68, 0.8), 0 0 60px rgba(249, 115, 22, 0.5);
-  }
-}
-
-.fire-button {
-  animation: fire-glow 2s infinite;
-  transition: all 0.3s ease;
-}
-
-.fire-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 40px rgba(239, 68, 68, 0.9), 0 0 80px rgba(249, 115, 22, 0.6);
-}
-
-/* Плавающие частицы */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-}
-
-.float {
-  animation: float 3s ease-in-out infinite;
-}
-
-/* Эффект появления */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.fade-in-up {
-  animation: fadeInUp 0.8s ease-out;
+.glow:hover {
+  box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
 }
 
 /* Градиентный текст */
-.text-gradient-fire {
-  background: linear-gradient(135deg, #ef4444 0%, #f97316 50%, #ef4444 100%);
+.text-gradient {
+  background: linear-gradient(135deg, #ef4444, #f97316);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Стеклянный эффект */
-.glass {
-  background: rgba(23, 23, 23, 0.8);
-  backdrop-filter: blur(10px);
+/* Простая карточка */
+.card {
+  background: rgba(23, 23, 23, 0.9);
   border: 1px solid rgba(220, 38, 38, 0.3);
+  border-radius: 12px;
 }
 
-/* Эффект наведения для карточек */
-.card-hover {
+.card:hover {
+  border-color: rgba(220, 38, 38, 0.6);
+  transform: translateY(-5px);
   transition: all 0.3s ease;
-}
-
-.card-hover:hover {
-  transform: translateY(-10px) scale(1.02);
-  box-shadow: 0 20px 40px rgba(239, 68, 68, 0.3);
-}
-
-/* Анимированный фон */
-@keyframes bg-shift {
-  0% { background-position: 0% 0%; }
-  50% { background-position: 100% 100%; }
-  100% { background-position: 0% 0%; }
-}
-
-.bg-animated {
-  background: linear-gradient(-45deg, #0a0a0a, #171717, #450a0a, #0a0a0a);
-  background-size: 400% 400%;
-  animation: bg-shift 15s ease infinite;
 }
