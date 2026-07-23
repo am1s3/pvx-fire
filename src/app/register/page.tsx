@@ -1,105 +1,71 @@
 'use client'
-import { useState } from 'react'
-import { supabasePublic } from '@/lib/supabase'
-import { hashPassword } from '@/lib/auth'
-import { useRouter } from 'next/navigation'
 
 export default function Register() {
-  const [nick, setNick] = useState('')
-  const [pass, setPass] = useState('')
-  const [err, setErr] = useState('')
-  const [loading, setLoading] = useState(false)
-  const router = useRouter()
-
-  const handleReg = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setErr('')
-    setLoading(true)
-    
-    if (!/^[a-zA-Z0-9_]{3,16}$/.test(nick)) {
-      setLoading(false)
-      return setErr(' Ник 3-16 символов (латиница, цифры, _)')
-    }
-    if (pass.length < 6) {
-      setLoading(false)
-      return setErr('❌ Пароль минимум 6 символов')
-    }
-
-    const hash = await hashPassword(pass)
-    const { error } = await supabasePublic.from('users').insert({ 
-      mc_nick: nick, 
-      password_hash: hash 
-    })
-    
-    setLoading(false)
-    
-    if (error) {
-      if (error.code === '23505') {
-        return setErr('❌ Ник занят')
-      }
-      return setErr('❌ Ошибка: ' + error.message)
-    }
-    
-    alert('✅ Аккаунт создан! Теперь войдите')
-    router.push('/login')
-  }
-
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-20">
-      <div className="card p-8 w-full max-w-md">
-        <h1 className="text-3xl font-black text-gradient text-center mb-6">
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0a', padding: '20px' }}>
+      <div style={{ background: '#171717', border: '1px solid #7f1d1d', borderRadius: '12px', padding: '40px', width: '100%', maxWidth: '400px' }}>
+        <h1 style={{ color: '#ef4444', textAlign: 'center', marginBottom: '30px', fontSize: '28px' }}>
           Регистрация
         </h1>
-
-        {err && (
-          <div className="bg-red-900/30 border border-red-600 text-red-300 p-3 rounded mb-4 text-sm">
-            {err}
-          </div>
-        )}
-
-        <form onSubmit={handleReg} className="space-y-4">
-          <div>
-            <label className="block text-gray-400 text-sm mb-2">
+        
+        <form>
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', color: '#9ca3af', marginBottom: '8px', fontSize: '14px' }}>
               Minecraft Ник
             </label>
             <input 
               type="text" 
-              value={nick} 
-              onChange={e => setNick(e.target.value)}
-              className="w-full bg-black/50 border border-red-900/50 rounded px-4 py-3 text-white focus:border-red-500 focus:outline-none"
+              style={{ 
+                width: '100%', 
+                background: '#0a0a0a', 
+                border: '1px solid #450a0a', 
+                borderRadius: '8px', 
+                padding: '12px', 
+                color: 'white',
+                boxSizing: 'border-box'
+              }}
               placeholder="Steve"
-              required
             />
           </div>
 
-          <div>
-            <label className="block text-gray-400 text-sm mb-2">
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', color: '#9ca3af', marginBottom: '8px', fontSize: '14px' }}>
               Пароль
             </label>
             <input 
               type="password" 
-              value={pass} 
-              onChange={e => setPass(e.target.value)}
-              className="w-full bg-black/50 border border-red-900/50 rounded px-4 py-3 text-white focus:border-red-500 focus:outline-none"
+              style={{ 
+                width: '100%', 
+                background: '#0a0a0a', 
+                border: '1px solid #450a0a', 
+                borderRadius: '8px', 
+                padding: '12px', 
+                color: 'white',
+                boxSizing: 'border-box'
+              }}
               placeholder="Минимум 6 символов"
-              required
             />
           </div>
 
           <button 
-            type="submit" 
-            disabled={loading}
-            className="w-full py-3 bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold rounded glow disabled:opacity-50"
+            type="submit"
+            style={{ 
+              width: '100%', 
+              background: 'linear-gradient(135deg, #dc2626, #f97316)', 
+              color: 'white', 
+              fontWeight: 'bold', 
+              padding: '14px', 
+              borderRadius: '8px',
+              border: 'none',
+              cursor: 'pointer'
+            }}
           >
-            {loading ? '⏳ Создание...' : 'Создать аккаунт'}
+            Создать аккаунт
           </button>
         </form>
 
-        <p className="text-gray-500 text-sm text-center mt-4">
-          Уже есть аккаунт?{' '}
-          <a href="/login" className="text-red-400 hover:text-red-300">
-            Войти
-          </a>
+        <p style={{ textAlign: 'center', color: '#6b7280', marginTop: '20px', fontSize: '14px' }}>
+          Уже есть аккаунт? <a href="/login" style={{ color: '#f87171' }}>Войти</a>
         </p>
       </div>
     </div>
