@@ -8,29 +8,108 @@ export default function Login() {
   const [nick, setNick] = useState('')
   const [pass, setPass] = useState('')
   const [err, setErr] = useState('')
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    const { data: user } = await supabasePublic.from('users').select('*').ilike('mc_nick', nick).single()
-    if (!user) return setErr('Игрок не найден')
-    
-    const valid = await verifyPassword(pass, user.password_hash)
-    if (!valid) return setErr('Неверный пароль')
+    setErr('')
+    setLoading(true)
 
-    localStorage.setItem('pvx_session', JSON.stringify({ id: user.id, nick: user.mc_nick, isAdmin: user.is_admin }))
+    const { data: user } = await supabasePublic
+      .from('users')
+      .select('*')
+      .ilike('mc_nick', nick)
+      .single()
+
+    if (!user) {
+      setLoading(false)
+      return setErr('❌ Игрок не найден')
+    }
+
+    const valid = await verifyPassword(pass, user.password_hash)
+    if (!valid) {
+      setLoading(false)
+      return setErr(' Неверный пароль')
+    }
+
+    // Сохраняем сессию
+    localStorage.setItem('pvx_session', JSON.stringify({ 
+      id: user.id, 
+      nick: user.mc_nick, 
+      isAdmin: user.is_admin 
+    }))
+
     router.push(user.is_admin ? '/admin' : '/dashboard')
   }
 
   return (
-    <div className="flex items-center justify-center min-h-[80vh]">
-      <form onSubmit={handleLogin} className="bg-ash border border-blood-900/50 p-8 rounded-lg w-full max-w-md glow-fire">
-        <h1 className="text-3xl font-black text-center mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blood-500 to-ember">ВХОД</h1>
-        {err && <p className="text-blood-500 text-sm mb-4">{err}</p>}
-        <input type="text" value={nick} onChange={e=>setNick(e.target.value)} placeholder="Ник" className="w-full bg-abyss border border-blood-900/30 p-3 rounded mb-4 text-white focus:border-blood-500 outline-none" />
-        <input type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="Пароль" className="w-full bg-abyss border border-blood-900/30 p-3 rounded mb-6 text-white focus:border-blood-500 outline-none" />
-        <button type="submit" className="w-full py-3 bg-gradient-to-r from-blood-700 to-blood-500 text-white font-bold rounded glow-fire uppercase">Войти</button>
-      </form>
+    <div className="min-h-screen bg-animated flex items-center justify-center px-4">
+      {/* Декоративные элементы */}
+      <div className="absolute top-20 left-10 w-72 h-72 bg-blood-600/20 rounded-full blur-3xl float"></div>
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-ember/20 rounded-full blur-3xl float" style={{ animationDelay: '1s' }}></div>
+
+      <div className="glass rounded-2xl p-10 w-full max-w-md relative z-10 fade-in-up">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-black text-gradient-fire mb-2">
+            Вход
+          </h1>
+          <p className="text-gray-400">
+            Добро пожаловать обратно, воин
+          </p>
+        </div>
+
+        {err && (
+          <div className="bg-blood-950/50 border border-blood-600 text-blood-300 p-4 rounded-lg mb-6 text-sm">
+            {err}
+          </div>
+        )}
+
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div>
+            <label className="block text-gray-400 text-sm mb-2 font-semibold">
+              Никнейм
+            </label>
+            <input 
+              type="text" 
+              value={nick} 
+              onChange={e => setNick(e.target.value)}
+              className="w-full bg-abyss border-2 border-blood-900/50 rounded-lg px-4 py-3 text-white focus:border-blood-500 focus:outline-none transition-all placeholder-gray-600"
+              placeholder="Steve"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-400 text-sm mb-2 font-semibold">
+              Пароль
+            </label>
+            <input 
+              type="password" 
+              value={pass} 
+              onChange={e => setPass(e.target.value)}
+              className="w-full bg-abyss border-2 border-blood-900/50 rounded-lg px-4 py-3 text-white focus:border-blood-500 focus:outline-none transition-all placeholder-gray-600"
+              placeholder="Введите пароль"
+              required
+            />
+          </div>
+
+          <button 
+            type="submit" 
+            disabled={loading}
+            className="w-full py-4 bg-gradient-to-r from-blood-600 to-ember text-white font-bold rounded-lg text-lg fire-button uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? '⏳ Загрузка...' : 'Войти'}
+          </button>
+        </form>
+
+        <p className="text-gray-500 text-sm text-center mt-6">
+          Нет аккаунта?{' '}
+          <a href="/register" className="text-blood-400 hover:text-blood-300 font-semibold transition-colors">
+            Регистрация
+          </a>
+        </p>
+      </div>
     </div>
   )
 }
