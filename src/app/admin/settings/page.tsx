@@ -25,11 +25,8 @@ export default async function SettingsPage() {
 
       <div className="bg-ash border border-blood-900/30 rounded-lg p-6">
         <h2 className="text-xl font-bold text-blood-400 mb-4">👻 Быстрое создание Мифа</h2>
-        <form action={async (formData: FormData) => {
-          'use server'
-          const nick = formData.get('nick') as string
-          if (nick) await createMyth(nick)
-        }} className="flex gap-3">
+        {/* ✅ ИСПРАВЛЕНО: Просто передаем createMyth, она сама заберет FormData из формы */}
+        <form action={createMyth} className="flex gap-3">
           <input name="nick" placeholder="Никнейм мифа" required className="flex-1 bg-abyss border border-blood-900/30 p-3 rounded text-white focus:border-blood-500 outline-none" />
           <button type="submit" className="px-6 py-3 bg-blood-600 hover:bg-blood-500 text-white font-bold rounded glow-fire">СОЗДАТЬ</button>
         </form>
