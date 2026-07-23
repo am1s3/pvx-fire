@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { verifyPassword } from '@/lib/auth'
 
+export const runtime = 'edge';
+
 export async function POST(request: NextRequest) {
   if (request.headers.get('X-API-SECRET') !== process.env.API_SECRET) {
     return NextResponse.json({ status: 'kick', message: '§cUnauthorized' }, { status: 401 })
@@ -12,7 +14,6 @@ export async function POST(request: NextRequest) {
     const nick = nickname?.trim()
     if (!nick) return NextResponse.json({ status: 'kick', message: '§cУкажите ник' })
 
-    // Проверка тех. работ
     const { data: maint } = await supabaseAdmin.from('settings').select('value').eq('key', 'maintenance_mode').single()
     if (maint?.value === 'true') {
       const { data: adminCheck } = await supabaseAdmin.from('users').select('is_admin').ilike('mc_nick', nick).single()
@@ -21,7 +22,6 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 1. ПРОВЕРКА МИФОВ
     const { data: myth } = await supabaseAdmin.from('myths').select('*').ilike('mc_nick', nick).single()
     if (myth) {
       let finalPrefix = myth.prefix || ''
@@ -33,13 +33,11 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // 2. ПРОВЕРКА ИГРОКОВ
     const { data: user } = await supabaseAdmin.from('users').select('*').ilike('mc_nick', nick).single()
     if (!user) {
       return NextResponse.json({ status: 'kick', message: '§cВы не зарегистрированы!\n§7Зарегистрируйтесь на сайте PVX.' })
     }
 
-    // Проверка пароля
     if (!password) {
       return NextResponse.json({ status: 'kick', message: '§cВведите пароль: /login <пароль>' })
     }
