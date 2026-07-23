@@ -22,18 +22,17 @@ export default function Login() {
       .ilike('mc_nick', nick)
       .single()
 
+    setLoading(false)
+
     if (!user) {
-      setLoading(false)
       return setErr('❌ Игрок не найден')
     }
 
     const valid = await verifyPassword(pass, user.password_hash)
     if (!valid) {
-      setLoading(false)
-      return setErr(' Неверный пароль')
+      return setErr('❌ Неверный пароль')
     }
 
-    // Сохраняем сессию
     localStorage.setItem('pvx_session', JSON.stringify({ 
       id: user.id, 
       nick: user.mc_nick, 
@@ -44,51 +43,42 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-animated flex items-center justify-center px-4">
-      {/* Декоративные элементы */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-blood-600/20 rounded-full blur-3xl float"></div>
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-ember/20 rounded-full blur-3xl float" style={{ animationDelay: '1s' }}></div>
-
-      <div className="glass rounded-2xl p-10 w-full max-w-md relative z-10 fade-in-up">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-black text-gradient-fire mb-2">
-            Вход
-          </h1>
-          <p className="text-gray-400">
-            Добро пожаловать обратно, воин
-          </p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center px-4 py-20">
+      <div className="card p-8 w-full max-w-md">
+        <h1 className="text-3xl font-black text-gradient text-center mb-6">
+          Вход
+        </h1>
 
         {err && (
-          <div className="bg-blood-950/50 border border-blood-600 text-blood-300 p-4 rounded-lg mb-6 text-sm">
+          <div className="bg-red-900/30 border border-red-600 text-red-300 p-3 rounded mb-4 text-sm">
             {err}
           </div>
         )}
 
-        <form onSubmit={handleLogin} className="space-y-6">
+        <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-gray-400 text-sm mb-2 font-semibold">
+            <label className="block text-gray-400 text-sm mb-2">
               Никнейм
             </label>
             <input 
               type="text" 
               value={nick} 
               onChange={e => setNick(e.target.value)}
-              className="w-full bg-abyss border-2 border-blood-900/50 rounded-lg px-4 py-3 text-white focus:border-blood-500 focus:outline-none transition-all placeholder-gray-600"
+              className="w-full bg-black/50 border border-red-900/50 rounded px-4 py-3 text-white focus:border-red-500 focus:outline-none"
               placeholder="Steve"
               required
             />
           </div>
 
           <div>
-            <label className="block text-gray-400 text-sm mb-2 font-semibold">
+            <label className="block text-gray-400 text-sm mb-2">
               Пароль
             </label>
             <input 
               type="password" 
               value={pass} 
               onChange={e => setPass(e.target.value)}
-              className="w-full bg-abyss border-2 border-blood-900/50 rounded-lg px-4 py-3 text-white focus:border-blood-500 focus:outline-none transition-all placeholder-gray-600"
+              className="w-full bg-black/50 border border-red-900/50 rounded px-4 py-3 text-white focus:border-red-500 focus:outline-none"
               placeholder="Введите пароль"
               required
             />
@@ -97,15 +87,15 @@ export default function Login() {
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full py-4 bg-gradient-to-r from-blood-600 to-ember text-white font-bold rounded-lg text-lg fire-button uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3 bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold rounded glow disabled:opacity-50"
           >
-            {loading ? '⏳ Загрузка...' : 'Войти'}
+            {loading ? '⏳ Вход...' : 'Войти'}
           </button>
         </form>
 
-        <p className="text-gray-500 text-sm text-center mt-6">
+        <p className="text-gray-500 text-sm text-center mt-4">
           Нет аккаунта?{' '}
-          <a href="/register" className="text-blood-400 hover:text-blood-300 font-semibold transition-colors">
+          <a href="/register" className="text-red-400 hover:text-red-300">
             Регистрация
           </a>
         </p>
