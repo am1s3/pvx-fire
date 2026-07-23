@@ -8,17 +8,20 @@ export default function Register() {
   const [nick, setNick] = useState('')
   const [pass, setPass] = useState('')
   const [err, setErr] = useState('')
-  const [success, setSuccess] = useState(false)
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   const handleReg = async (e: React.FormEvent) => {
     e.preventDefault()
     setErr('')
+    setLoading(true)
     
     if (!/^[a-zA-Z0-9_]{3,16}$/.test(nick)) {
-      return setErr('❌ Ник должен быть 3-16 символов (латиница, цифры, _)')
+      setLoading(false)
+      return setErr(' Ник 3-16 символов (латиница, цифры, _)')
     }
     if (pass.length < 6) {
+      setLoading(false)
       return setErr('❌ Пароль минимум 6 символов')
     }
 
@@ -28,80 +31,56 @@ export default function Register() {
       password_hash: hash 
     })
     
+    setLoading(false)
+    
     if (error) {
       if (error.code === '23505') {
-        return setErr('❌ Этот ник уже занят')
+        return setErr('❌ Ник занят')
       }
-      return setErr('❌ Ошибка регистрации: ' + error.message)
+      return setErr('❌ Ошибка: ' + error.message)
     }
     
-    setSuccess(true)
-    setTimeout(() => router.push('/login'), 2000)
-  }
-
-  if (success) {
-    return (
-      <div className="min-h-screen bg-animated flex items-center justify-center px-4">
-        <div className="glass rounded-2xl p-12 text-center max-w-md fade-in-up pulse-fire">
-          <div className="text-6xl mb-4">✅</div>
-          <h2 className="text-3xl font-black text-gradient-fire mb-4">Успешно!</h2>
-          <p className="text-gray-300 mb-6">
-            Аккаунт <span className="text-white font-bold">{nick}</span> создан!
-          </p>
-          <p className="text-gray-400 text-sm">
-            Перенаправляем на страницу входа...
-          </p>
-        </div>
-      </div>
-    )
+    alert('✅ Аккаунт создан! Теперь войдите')
+    router.push('/login')
   }
 
   return (
-    <div className="min-h-screen bg-animated flex items-center justify-center px-4">
-      {/* Декоративные элементы */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-blood-600/20 rounded-full blur-3xl float"></div>
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-ember/20 rounded-full blur-3xl float" style={{ animationDelay: '1s' }}></div>
-
-      <div className="glass rounded-2xl p-10 w-full max-w-md relative z-10 fade-in-up">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-black text-gradient-fire mb-2">
-            Регистрация
-          </h1>
-          <p className="text-gray-400">
-            Создай аккаунт и начни приключение
-          </p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center px-4 py-20">
+      <div className="card p-8 w-full max-w-md">
+        <h1 className="text-3xl font-black text-gradient text-center mb-6">
+          Регистрация
+        </h1>
 
         {err && (
-          <div className="bg-blood-950/50 border border-blood-600 text-blood-300 p-4 rounded-lg mb-6 text-sm">
+          <div className="bg-red-900/30 border border-red-600 text-red-300 p-3 rounded mb-4 text-sm">
             {err}
           </div>
         )}
 
-        <form onSubmit={handleReg} className="space-y-6">
+        <form onSubmit={handleReg} className="space-y-4">
           <div>
-            <label className="block text-gray-400 text-sm mb-2 font-semibold">
-              Minecraft Никнейм
+            <label className="block text-gray-400 text-sm mb-2">
+              Minecraft Ник
             </label>
             <input 
               type="text" 
               value={nick} 
               onChange={e => setNick(e.target.value)}
-              className="w-full bg-abyss border-2 border-blood-900/50 rounded-lg px-4 py-3 text-white focus:border-blood-500 focus:outline-none transition-all placeholder-gray-600"
+              className="w-full bg-black/50 border border-red-900/50 rounded px-4 py-3 text-white focus:border-red-500 focus:outline-none"
               placeholder="Steve"
               required
             />
           </div>
 
           <div>
-            <label className="block text-gray-400 text-sm mb-2 font-semibold">
+            <label className="block text-gray-400 text-sm mb-2">
               Пароль
             </label>
             <input 
               type="password" 
               value={pass} 
               onChange={e => setPass(e.target.value)}
-              className="w-full bg-abyss border-2 border-blood-900/50 rounded-lg px-4 py-3 text-white focus:border-blood-500 focus:outline-none transition-all placeholder-gray-600"
+              className="w-full bg-black/50 border border-red-900/50 rounded px-4 py-3 text-white focus:border-red-500 focus:outline-none"
               placeholder="Минимум 6 символов"
               required
             />
@@ -109,15 +88,16 @@ export default function Register() {
 
           <button 
             type="submit" 
-            className="w-full py-4 bg-gradient-to-r from-blood-600 to-ember text-white font-bold rounded-lg text-lg fire-button uppercase tracking-wider"
+            disabled={loading}
+            className="w-full py-3 bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold rounded glow disabled:opacity-50"
           >
-            Создать аккаунт
+            {loading ? '⏳ Создание...' : 'Создать аккаунт'}
           </button>
         </form>
 
-        <p className="text-gray-500 text-sm text-center mt-6">
+        <p className="text-gray-500 text-sm text-center mt-4">
           Уже есть аккаунт?{' '}
-          <a href="/login" className="text-blood-400 hover:text-blood-300 font-semibold transition-colors">
+          <a href="/login" className="text-red-400 hover:text-red-300">
             Войти
           </a>
         </p>
