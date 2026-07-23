@@ -43,12 +43,20 @@ export async function toggleMaintenance() {
   revalidatePath('/admin')
 }
 
-export async function createMyth(nick: string) {
-  await supabaseAdmin.from('myths').insert({ mc_nick: nick.toLowerCase() })
-  revalidatePath('/admin/myths')
+// ✅ ИСПРАВЛЕНО: Теперь принимает FormData из формы
+export async function createMyth(formData: FormData) {
+  const nick = formData.get('nick') as string
+  if (nick) {
+    await supabaseAdmin.from('myths').insert({ mc_nick: nick.toLowerCase() })
+    revalidatePath('/admin/myths')
+  }
 }
 
-export async function deleteMyth(nick: string) {
-  await supabaseAdmin.from('myths').delete().ilike('mc_nick', nick)
-  revalidatePath('/admin/myths')
+// ✅ ИСПРАВЛЕНО: Теперь принимает FormData из формы
+export async function deleteMyth(formData: FormData) {
+  const nick = formData.get('nick') as string
+  if (nick) {
+    await supabaseAdmin.from('myths').delete().ilike('mc_nick', nick)
+    revalidatePath('/admin/myths')
+  }
 }
